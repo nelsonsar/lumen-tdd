@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Girl;
+use App\Services\GirlServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -10,17 +11,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class ApiController
 {
     /**
-     * @var Girl
+     * @var GirlServiceInterface
      */
-    protected $girl;
+    private $girl;
 
     /**
-     * ApiController constructor.
-     * @param Girl $girl
+     * @param GirlServiceInterface $girl
      */
-    public function __construct(Girl $girl)
+    public function __construct(GirlServiceInterface $service)
     {
-        $this->girl = $girl;
+        $this->girl = $service;
     }
 
     /**
@@ -28,7 +28,9 @@ class ApiController
      */
     public function allGirls()
     {
-        return $this->girl->all();
+        $allGirls = $this->girl->getAll();
+
+        return new JsonResponse($allGirls, 200);
     }
 
     /**
